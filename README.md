@@ -4,8 +4,6 @@ Personal portfolio: Embedded, Automotive, C++/Qt and Flutter.
 
 **[unreallx.ru](https://unreallx.ru)**
 
-![Preview](assets/og.jpg)
-
 ## Projects
 
 | Project | What it is | Stack |
