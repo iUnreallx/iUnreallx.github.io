@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="ru" data-theme="dark" data-lang="ru" data-ch="redrive">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Артём: embedded, automotive, C++/Qt и Flutter</title>
+<meta name="description" content="Портфолио Артёма (iUnreallx): embedded и automotive, приложения на C++/Qt и Flutter. ReDrive, ELM327 Emulator и Quanta Cleaner.">
+<meta name="theme-color" content="#0A0B0C">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Артём: от микроконтроллера до интерфейса">
+<meta property="og:description" content="ReDrive, ELM327 Emulator и Quanta Cleaner: open-source приложения для телефона и Windows.">
+<meta property="og:url" content="https://unreallx.ru/">
+<meta property="og:image" content="https://unreallx.ru/assets/og.jpg">
+<link rel="canonical" href="https://unreallx.ru/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<script>
+  // Theme and language are set before the first paint, so nothing flashes.
+  (() => {
+    const d = document.documentElement;
+    let theme, lang;
+    try { theme = localStorage.getItem('theme'); lang = localStorage.getItem('lang'); } catch (e) {}
+    const asked = new URLSearchParams(location.search).get('lang');
+    if (asked === 'ru' || asked === 'en') lang = asked;
+    if (lang !== 'ru' && lang !== 'en') lang = (navigator.language || '').toLowerCase().startsWith('ru') ? 'ru' : 'en';
+    d.dataset.theme = theme === 'light' ? 'light' : 'dark';
+    d.dataset.lang = lang;
+    d.lang = lang;
+    d.classList.add('js');
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Martian+Mono:wdth,wght@75..112.5,400;75..112.5,500&family=Sofia+Sans+Extra+Condensed:wght@700;800&family=Sofia+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-github" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .8.1-.7.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></symbol>
+  <symbol id="i-tg" viewBox="0 0 24 24"><path fill="currentColor" d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.7.8l-4.8-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.5 13.2l-4.7-1.5c-1-.3-1-1 .2-1.5L20.5 3c.9-.3 1.6.2 1.4 1.3z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path fill="currentColor" d="M18.2 2.3h3.3l-7.2 8.2 8.5 11.2h-6.6l-5.2-6.8-6 6.8H1.7l7.7-8.8L1.2 2.3H8l4.7 6.2 5.5-6.2zm-1.2 17.4h1.8L7.1 4.2H5.1l11.9 15.5z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 17 17 7M8 7h9v9"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 4v12m-5-5 5 5 5-5M5 20h14"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path fill="currentColor" d="m12 2.5 2.9 6 6.6.9-4.8 4.6 1.2 6.5-5.9-3.1-5.9 3.1 1.2-6.5-4.8-4.6 6.6-.9z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="m6 6 12 12M18 6 6 18"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m15 5-7 7 7 7"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/></symbol>
+</svg>
+
+<!-- Intro: a light plate with greetings in many languages, then it lifts. -->
+<div class="curtain" id="curtain" aria-hidden="true">
+  <span class="hello" id="hello">Hello</span>
+</div>
+<script>
+  // A word every ~0.18s, then the plate lifts. Without this script it lifts on its own via CSS.
+  (() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const root = document.documentElement;
+    const curtain = document.getElementById('curtain');
+    const hello = document.getElementById('hello');
+    const words = ['Hello', 'Hola', 'Bonjour', 'Ciao', 'Hallo', 'Olá', 'Hej', 'Merhaba', 'こんにちは', '안녕하세요', 'नमस्ते', 'Привет'];
+    if (root.dataset.lang === 'en') { words[0] = 'Привет'; words[words.length - 1] = 'Hello'; }
+
+    root.classList.add('intro');
+    curtain.classList.add('js-run');
+    hello.textContent = words[0];
+
+    const SKIP = ['wheel', 'touchmove', 'pointerdown', 'keydown'];
+    let i = 0, timer = 0, gone = false;
+    const go = () => {
+      if (gone) return;
+      gone = true;
+      clearTimeout(timer);
+      SKIP.forEach(t => removeEventListener(t, go));
+      curtain.classList.add('go');
+      setTimeout(() => {
+        root.classList.remove('intro');
+        document.dispatchEvent(new Event('intro-done'));
+      }, 250);
+    };
+    const next = () => {
+      i++;
+      if (i < words.length) {
+        hello.textContent = words[i];
+        timer = setTimeout(next, i === words.length - 1 ? 550 : 150 + Math.random() * 60);
+      } else go();
+    };
+    // A click, a key press or a scroll skips the rest of the greetings.
+    SKIP.forEach(t => addEventListener(t, go, { passive: true }));
+    timer = setTimeout(next, 600);
+  })();
+</script>
+
+<a class="skip" href="#work"><span lang="ru">К проектам</span><span lang="en">Skip to projects</span></a>
+
+<header class="bar" id="bar">
+  <div class="bar-in">
+    <a class="brand" href="#top" aria-label="На главную" data-aria-en="Home">
+      iUnreallx
+    </a>
+    <nav class="bar-nav" aria-label="Разделы" data-aria-en="Sections">
+      <a href="#work"><span lang="ru">Проекты</span><span lang="en">Work</span></a>
+      <a href="#approach"><span lang="ru">Подход</span><span lang="en">Approach</span></a>
+      <a href="#stack"><span lang="ru">Стек</span><span lang="en">Stack</span></a>
+      <a href="#contact"><span lang="ru">Контакты</span><span lang="en">Contact</span></a>
+    </nav>
+    <div class="bar-tools">
+      <div class="lang" role="group" aria-label="Язык / Language">
+        <button type="button" data-set-lang="ru">RU</button>
+        <button type="button" data-set-lang="en">EN</button>
+      </div>
+      <button class="tool" type="button" id="theme" aria-label="Переключить тему" data-aria-en="Switch theme">
+        <svg class="only-dark"><use href="#i-sun"/></svg>
+        <svg class="only-light"><use href="#i-moon"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ─────────────── Hero ─────────────── -->
+  <section class="hero" id="hero" aria-labelledby="hero-title">
+    <div class="hero-pin">
+      <div class="hero-glow" aria-hidden="true"></div>
+
+      <canvas class="dust" id="dust" aria-hidden="true"></canvas>
+      <div class="hero-name">
+        <h1 id="hero-title"><span lang="ru">Артём</span><span lang="en">Artyom</span></h1>
+      </div>
+
+      <div class="hero-shade" aria-hidden="true"></div>
+      <div class="hero-cap" id="hero-cap" aria-hidden="true"></div>
+
+      <div class="hero-foot after">
+        <div class="hero-role">
+          <p class="hero-say" id="hero-say">От микроконтроллера до интерфейса.</p>
+          <small>Embedded, Automotive, C++/Qt, Flutter</small>
+        </div>
+        <nav class="picks" aria-label="Проекты" data-aria-en="Projects">
+          <a class="pick" href="#redrive" data-project="redrive" style="--pc:var(--lime)"><i></i>ReDrive<small><svg><use href="#i-star"/></svg><span data-gh="ReDrive:stars">151</span></small></a>
+          <a class="pick" href="#elm" data-project="elm" style="--pc:var(--orange)"><i></i>ELM327 Emulator<small><svg><use href="#i-star"/></svg><span data-gh="ELM327-Emulator:stars">10</span></small></a>
+          <a class="pick" href="#quanta" data-project="quanta" style="--pc:var(--blue)"><i></i>Quanta Cleaner<small><svg><use href="#i-star"/></svg><span data-gh="Quanta-Cleaner:stars">7</span></small></a>
+        </nav>
+        <div class="hero-cta">
+          <a class="hlink" href="https://t.me/unreallx" target="_blank" rel="noopener"><span lang="ru">Написать в Telegram</span><span lang="en">Message on Telegram</span><svg><use href="#i-arrow"/></svg></a>
+          <a class="hlink" href="https://github.com/iUnreallx" target="_blank" rel="noopener">GitHub<svg><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+
+      <div class="hero-exit" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <div class="work" id="work">
+
+  <!-- ─────────────── ReDrive ─────────────── -->
+  <article class="case" id="redrive" data-channel="redrive" aria-labelledby="t-redrive">
+    <div class="stage stage-rd">
+      <div class="stage-top">
+        <h2 class="fit title" id="t-redrive" data-max-vh="46"><span class="fit-in">ReDrive</span></h2>
+        <p class="stage-tag">01 / <span lang="ru">Мобильное приложение</span><span lang="en">Mobile app</span></p>
+      </div>
+      <figure class="car" data-depth=".05"><img src="assets/redrive-car.webp" alt="" width="1791" height="853" loading="lazy"></figure>
+      <div class="phones">
+        <button class="phone phone-b" type="button" data-depth="-.04" data-zoom="assets/redrive-connect.webp" data-cap-ru="ReDrive: подключение к адаптеру" data-cap-en="ReDrive: connecting to an adapter">
+          <img src="assets/redrive-connect.webp" width="760" height="1613" loading="lazy" alt="Экран подключения ReDrive: список Bluetooth-адаптеров" data-alt-en="ReDrive connection screen with a list of Bluetooth adapters">
+        </button>
+        <button class="phone phone-a" type="button" data-depth="-.09" data-zoom="assets/redrive-home.webp" data-cap-ru="ReDrive: главный экран с показаниями" data-cap-en="ReDrive: home screen with live readings">
+          <img src="assets/redrive-home.webp" width="760" height="1611" loading="lazy" alt="Главный экран ReDrive: скорость 168 км/ч и 6700 об/мин" data-alt-en="ReDrive home screen showing 168 km/h and 6700 rpm">
+        </button>
+      </div>
+    </div>
+
+    <div class="brief">
+      <div class="brief-claim reveal">
+        <h3 lang="ru">Приборная панель машины <em>в&nbsp;кармане.</em></h3>
+        <h3 lang="en">Your car’s dashboard, <em>in your pocket.</em></h3>
+        <div class="links">
+          <a class="btn btn-fill" href="https://github.com/iUnreallx/ReDrive" target="_blank" rel="noopener"><svg><use href="#i-github"/></svg><span lang="ru">Исходный код</span><span lang="en">Source code</span></a>
+          <a class="btn" href="https://iunreallx.github.io/ReDrive/" target="_blank" rel="noopener"><span lang="ru">Сайт проекта</span><span lang="en">Website</span><svg><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+      <div class="brief-text reveal">
+        <h4 lang="ru">Задача</h4><h4 lang="en">The problem</h4>
+        <p lang="ru">OBD-приложения устарели, перегружены рекламой и&nbsp;прячут функции за&nbsp;подпиской. ReDrive открыт и&nbsp;бесплатен: подключается к&nbsp;адаптеру ELM327 и&nbsp;показывает только нужные за&nbsp;рулём данные.</p>
+        <p lang="en">OBD apps tend to be dated, full of ads and locked behind subscriptions. ReDrive is free and open: it pairs with an ELM327 adapter and shows only what you need while driving.</p>
+        <h4 lang="ru">Что сделано</h4><h4 lang="en">What I built</h4>
+        <ul lang="ru">
+          <li>OBD-ядро, не зависящее от транспорта: клиент ELM327 с очередью команд, парсер, реестр PID и декодеры</li>
+          <li>Связь по Bluetooth Classic и Wi-Fi с переключением транспорта и автоматическим переподключением</li>
+          <li>Скорость, обороты, температура и напряжение в реальном времени</li>
+          <li>Демо-режим без машины и тесты на фейковом сервере ELM327</li>
+        </ul>
+        <ul lang="en">
+          <li>A transport-agnostic OBD core: ELM327 client with a command queue, parser, PID registry and decoders</li>
+          <li>Bluetooth Classic and Wi-Fi links with transport switching and automatic reconnect</li>
+          <li>Speed, RPM, coolant temperature and voltage in real time</li>
+          <li>A demo mode with no car, and tests against a fake ELM327 server</li>
+        </ul>
+      </div>
+      <dl class="spec reveal">
+        <div><dt><span lang="ru">Звёзды</span><span lang="en">Stars</span></dt><dd class="big" data-gh="ReDrive:stars">151</dd></div>
+        <div><dt><span lang="ru">Форки</span><span lang="en">Forks</span></dt><dd class="big" data-gh="ReDrive:forks">27</dd></div>
+        <div><dt><span lang="ru">Стек</span><span lang="en">Stack</span></dt><dd>Flutter, Dart, Provider</dd></div>
+        <div><dt><span lang="ru">Код</span><span lang="en">Codebase</span></dt><dd><span lang="ru">58 файлов Dart, 18 файлов тестов</span><span lang="en">58 Dart files, 18 test files</span></dd></div>
+        <div><dt><span lang="ru">Дальше</span><span lang="en">Next up</span></dt><dd><span lang="ru">Чтение ошибок DTC, USB</span><span lang="en">DTC fault codes, USB</span></dd></div>
+        <div><dt><span lang="ru">Лицензия</span><span lang="en">License</span></dt><dd>GPL-3.0</dd></div>
+        <div><dt><span lang="ru">Обновлён</span><span lang="en">Updated</span></dt><dd data-gh="ReDrive:pushed">10.2026</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <!-- ─────────────── The link between the two projects ─────────────── -->
+  <aside class="wire" aria-label="Связь проектов" data-aria-en="How the projects connect">
+    <p class="wire-text reveal">
+      <span lang="ru">Чтобы проверять ReDrive без&nbsp;автомобиля, я&nbsp;<em>написал автомобиль.</em></span>
+      <span lang="en">To test ReDrive without a car, I&nbsp;<em>wrote the car.</em></span>
+    </p>
+    <div class="wire-line" aria-hidden="true">
+      <span class="wire-end" style="--c:var(--lime)">ReDrive</span>
+      <div class="wire-track">
+        <span class="pkt pkt-tx">010C</span>
+        <span class="pkt pkt-rx">41 0C 1A F8</span>
+      </div>
+      <span class="wire-end" style="--c:var(--orange)">ELM327 Emulator</span>
+    </div>
+  </aside>
+
+  <!-- ─────────────── ELM327 Emulator ─────────────── -->
+  <article class="case" id="elm" data-channel="elm" aria-labelledby="t-elm">
+    <div class="stage stage-elm">
+      <div class="stage-top">
+        <h2 class="fit title" id="t-elm"><span class="fit-in">ELM327 Emulator</span></h2>
+        <p class="stage-tag">02 / <span lang="ru">Десктопное приложение</span><span lang="en">Desktop app</span></p>
+      </div>
+      <div class="gallery" data-gallery>
+        <button class="shot" type="button" data-shot data-depth="-.03" aria-label="Открыть скриншот" data-aria-en="Open screenshot">
+          <img src="assets/elm-overview.webp" width="1600" height="982" loading="lazy" alt="ELM327 Emulator: приборы скорости и оборотов" data-alt-en="ELM327 Emulator: speed and RPM gauges">
+        </button>
+        <div class="thumbs" role="group" aria-label="Экраны приложения" data-aria-en="App screens">
+          <button class="thumb is-on" type="button" data-src="assets/elm-overview.webp" data-cap-ru="Обзор: приборы" data-cap-en="Overview: live gauges"><img src="assets/elm-overview.webp" alt="" loading="lazy"><span lang="ru">Обзор</span><span lang="en">Overview</span></button>
+          <button class="thumb" type="button" data-src="assets/elm-parameters.webp" data-cap-ru="Параметры и сценарии" data-cap-en="Parameters and scenarios"><img src="assets/elm-parameters.webp" alt="" loading="lazy"><span lang="ru">Параметры</span><span lang="en">Parameters</span></button>
+          <button class="thumb" type="button" data-src="assets/elm-at.webp" data-cap-ru="AT-команды и консоль" data-cap-en="AT commands and console"><img src="assets/elm-at.webp" alt="" loading="lazy"><span lang="ru">AT-команды</span><span lang="en">AT commands</span></button>
+          <button class="thumb" type="button" data-src="assets/elm-connection.webp" data-cap-ru="Подключение клиентов" data-cap-en="Client connection"><img src="assets/elm-connection.webp" alt="" loading="lazy"><span lang="ru">Подключение</span><span lang="en">Connection</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief">
+      <div class="brief-claim reveal">
+        <h3 lang="ru">Тестирование OBD-приложений <em>без&nbsp;автомобиля.</em></h3>
+        <h3 lang="en">Test OBD apps <em>without a car.</em></h3>
+        <div class="links">
+          <a class="btn btn-fill" href="https://github.com/iUnreallx/ELM327-Emulator" target="_blank" rel="noopener"><svg><use href="#i-github"/></svg><span lang="ru">Исходный код</span><span lang="en">Source code</span></a>
+          <a class="btn" href="https://github.com/iUnreallx/ELM327-Emulator/releases/latest" target="_blank" rel="noopener"><svg><use href="#i-down"/></svg><span lang="ru">Скачать</span><span lang="en">Download</span></a>
+        </div>
+      </div>
+      <div class="brief-text reveal">
+        <h4 lang="ru">Задача</h4><h4 lang="en">The problem</h4>
+        <p lang="ru">Для проверки OBD-приложения нужны машина, адаптер и&nbsp;стабильная связь, а&nbsp;каждый прогон делается вручную. Эмулятор заменяет всё это предсказуемыми ответами через последовательный порт.</p>
+        <p lang="en">Testing an OBD app takes a car, an adapter, a stable link and a lot of manual runs. The emulator replaces all of that with predictable responses over a serial port.</p>
+        <h4 lang="ru">Что сделано</h4><h4 lang="en">What I built</h4>
+        <ul lang="ru">
+          <li>Ядро на C++17: конвейер обработки запросов и транспорт за интерфейсом <code>ITransport</code></li>
+          <li>AT-команды, запросы Mode 01, обнаружение PID через <code>0100</code></li>
+          <li>Сценарии от холостого хода до отсечки, задержки ответа и джиттер</li>
+          <li>Журнал RX/TX с паузой и экспортом, интерфейс на QML</li>
+        </ul>
+        <ul lang="en">
+          <li>A C++17 core: a request pipeline with the transport behind an <code>ITransport</code> interface</li>
+          <li>AT commands, Mode 01 requests, PID discovery through <code>0100</code></li>
+          <li>Scenarios from idle to redline, response delays and jitter</li>
+          <li>An RX/TX log with pause and export, and a QML interface</li>
+        </ul>
+      </div>
+      <dl class="spec reveal">
+        <div><dt><span lang="ru">Звёзды</span><span lang="en">Stars</span></dt><dd class="big" data-gh="ELM327-Emulator:stars">10</dd></div>
+        <div><dt><span lang="ru">Скачивания</span><span lang="en">Downloads</span></dt><dd class="big" data-dl="ELM327-Emulator">25</dd></div>
+        <div><dt><span lang="ru">Стек</span><span lang="en">Stack</span></dt><dd>C++17, Qt 6, QML, CMake</dd></div>
+        <div><dt><span lang="ru">Конвейер</span><span lang="en">Pipeline</span></dt><dd class="pipe">Preprocessor → Router → Handler → Formatter</dd></div>
+        <div><dt><span lang="ru">Версия</span><span lang="en">Version</span></dt><dd>1.1.0</dd></div>
+        <div><dt><span lang="ru">Лицензия</span><span lang="en">License</span></dt><dd>MIT</dd></div>
+        <div><dt><span lang="ru">Обновлён</span><span lang="en">Updated</span></dt><dd data-gh="ELM327-Emulator:pushed">10.2026</dd></div>
+      </dl>
+    </div>
+
+    <!-- Working miniature of the emulator -->
+    <section class="bench" id="bench" aria-labelledby="bench-title">
+      <header class="bench-head reveal">
+        <h3 id="bench-title"><span lang="ru">Приложение не&nbsp;знает, <em>что машины нет.</em></span><span lang="en">The app has no idea <em>there’s no car.</em></span></h3>
+        <p lang="ru">Спросите эмулятор, как это делает OBD-приложение. Ответы приходят в&nbsp;настоящем формате ELM327.</p>
+        <p lang="en">Ask the emulator the way an OBD app does. The replies come back in real ELM327 format.</p>
+      </header>
+      <div class="talk reveal">
+        <ol class="talk-log" id="talk" aria-live="off"></ol>
+        <div class="talk-keys" id="talk-keys"><button type="button" data-cmd="ATZ">ATZ</button><button type="button" data-cmd="ATI">ATI</button><button type="button" data-cmd="ATRV">ATRV</button><button type="button" data-cmd="0100">0100</button><button type="button" data-cmd="010C">010C</button><button type="button" data-cmd="010D">010D</button><button type="button" data-cmd="0105">0105</button><button type="button" data-cmd="0104">0104</button><button type="button" data-cmd="0111">0111</button></div>
+        <form class="talk-ask" id="talk-form" autocomplete="off">
+          <span aria-hidden="true">&gt;</span>
+          <input id="talk-input" type="text" spellcheck="false" autocapitalize="characters" maxlength="12" placeholder="010C" aria-label="Команда ELM327" data-aria-en="ELM327 command">
+          <button type="submit" aria-label="Отправить" data-aria-en="Send"><svg><use href="#i-arrow"/></svg></button>
+        </form>
+      </div>
+    </section>
+  </article>
+
+  <!-- ─────────────── Quanta Cleaner ─────────────── -->
+  <article class="case" id="quanta" data-channel="quanta" aria-labelledby="t-quanta">
+    <div class="stage stage-q">
+      <div class="stage-top">
+        <h2 class="fit title" id="t-quanta"><span class="fit-in">Quanta Cleaner</span></h2>
+        <p class="stage-tag">03 / <span lang="ru">Приложение для Windows</span><span lang="en">Windows app</span></p>
+      </div>
+      <div class="gallery gallery-flip" data-gallery>
+        <div class="thumbs" role="group" aria-label="Экраны приложения" data-aria-en="App screens">
+          <button class="thumb is-on" type="button" data-src="assets/quanta-main.webp" data-cap-ru="Главный экран: сколько можно очистить" data-cap-en="Main screen: how much can be freed"><img src="assets/quanta-main.webp" alt="" loading="lazy"><span lang="ru">Главная</span><span lang="en">Overview</span></button>
+          <button class="thumb" type="button" data-src="assets/quanta-categories.webp" data-cap-ru="Выбор категорий очистки" data-cap-en="Choosing what to clean"><img src="assets/quanta-categories.webp" alt="" loading="lazy"><span lang="ru">Категории</span><span lang="en">Categories</span></button>
+          <button class="thumb" type="button" data-src="assets/quanta-settings.webp" data-cap-ru="Настройки: тема и акцентный цвет" data-cap-en="Settings: theme and accent color"><img src="assets/quanta-settings.webp" alt="" loading="lazy"><span lang="ru">Настройки</span><span lang="en">Settings</span></button>
+          <button class="thumb" type="button" data-src="assets/quanta-about.webp" data-cap-ru="О приложении" data-cap-en="About the app"><img src="assets/quanta-about.webp" alt="" loading="lazy"><span lang="ru">О приложении</span><span lang="en">About</span></button>
+        </div>
+        <button class="shot" type="button" data-shot data-depth="-.03" aria-label="Открыть скриншот" data-aria-en="Open screenshot">
+          <img src="assets/quanta-main.webp" width="1300" height="875" loading="lazy" alt="Quanta Cleaner: кольцо с объёмом мусора, 729.8 МБ" data-alt-en="Quanta Cleaner: ring showing 729.8 MB of junk">
+        </button>
+      </div>
+    </div>
+
+    <div class="brief">
+      <div class="brief-claim reveal">
+        <h3 lang="ru">Один клик, <em>и&nbsp;мусора нет.</em></h3>
+        <h3 lang="en">One click, <em>and the junk is gone.</em></h3>
+        <div class="links">
+          <a class="btn btn-fill" href="https://github.com/iUnreallx/Quanta-Cleaner" target="_blank" rel="noopener"><svg><use href="#i-github"/></svg><span lang="ru">Исходный код</span><span lang="en">Source code</span></a>
+          <a class="btn" href="https://github.com/iUnreallx/Quanta-Cleaner/releases/latest" target="_blank" rel="noopener"><svg><use href="#i-down"/></svg><span lang="ru">Скачать</span><span lang="en">Download</span></a>
+        </div>
+      </div>
+      <div class="brief-text reveal">
+        <h4 lang="ru">Задача</h4><h4 lang="en">The problem</h4>
+        <p lang="ru">Системные комбайны тяжёлые, с&nbsp;рекламой и&nbsp;фоновыми службами. Quanta открывается, показывает, что занимает место, и&nbsp;удаляет только выбранное. Без установки и&nbsp;без подтверждения ничего не&nbsp;трогает.</p>
+        <p lang="en">All-in-one system tools are heavy, with ads and background services. Quanta opens, shows what takes up space and removes only what you pick. No installer, and nothing goes without your confirmation.</p>
+        <h4 lang="ru">Что сделано</h4><h4 lang="en">What I built</h4>
+        <ul lang="ru">
+          <li>Сканирование и очистка на C++17, отдельный модуль на каждую из 9 категорий</li>
+          <li>Единое кольцо категорий: сразу видно, что занимает больше всего</li>
+          <li>Журнал каждой очистки прямо в приложении</li>
+          <li>Светлая и тёмная темы, 8 акцентов, русский и английский</li>
+        </ul>
+        <ul lang="en">
+          <li>Scanning and cleaning in C++17, with a separate cleaner for each of 9 categories</li>
+          <li>One category ring that shows at a glance what takes the most space</li>
+          <li>A log of every cleaning run, right in the app</li>
+          <li>Light and dark themes, 8 accents, English and Russian</li>
+        </ul>
+      </div>
+      <dl class="spec reveal">
+        <div><dt><span lang="ru">Скачивания</span><span lang="en">Downloads</span></dt><dd class="big" data-dl="Quanta-Cleaner">80</dd></div>
+        <div><dt><span lang="ru">Звёзды</span><span lang="en">Stars</span></dt><dd class="big" data-gh="Quanta-Cleaner:stars">7</dd></div>
+        <div><dt><span lang="ru">Стек</span><span lang="en">Stack</span></dt><dd>C++17, Qt 6, Qt Quick, CMake</dd></div>
+        <div><dt><span lang="ru">Система</span><span lang="en">Platform</span></dt><dd>Windows 10, 11</dd></div>
+        <div><dt><span lang="ru">Версия</span><span lang="en">Version</span></dt><dd>1.2.0</dd></div>
+        <div><dt><span lang="ru">Лицензия</span><span lang="en">License</span></dt><dd>MIT</dd></div>
+        <div><dt><span lang="ru">Обновлён</span><span lang="en">Updated</span></dt><dd data-gh="Quanta-Cleaner:pushed">10.2026</dd></div>
+      </dl>
+    </div>
+  </article>
+  </div>
+
+  <!-- ─────────────── Approach ─────────────── -->
+  <section class="sec" id="approach" data-channel="base" aria-labelledby="t-approach">
+    <header class="sec-head reveal">
+      <h2 id="t-approach"><span lang="ru">Как я <em>работаю.</em></span><span lang="en">How I <em>work.</em></span></h2>
+    </header>
+    <ol class="rules">
+      <li class="reveal">
+        <span class="rule-n">01</span>
+        <h3><span lang="ru">Продукт важнее украшений</span><span lang="en">Product over decoration</span></h3>
+        <p lang="ru">Каждая функция решает реальную задачу. Поэтому в&nbsp;ReDrive нет рекламы и&nbsp;подписок, только данные, нужные за&nbsp;рулём.</p>
+        <p lang="en">Every feature solves a real problem. That’s why ReDrive has no ads or subscriptions, just the data you need behind the wheel.</p>
+      </li>
+      <li class="reveal">
+        <span class="rule-n">02</span>
+        <h3><span lang="ru">Ясность важнее сложности</span><span lang="en">Clarity over complexity</span></h3>
+        <p lang="ru">Архитектура растёт, не&nbsp;усложняя интерфейс. В&nbsp;ReDrive и&nbsp;эмуляторе транспорт вынесен за&nbsp;интерфейс, и&nbsp;новый канал связи добавляется без переписывания ядра.</p>
+        <p lang="en">Architecture should scale without making the interface harder to use. In ReDrive and the emulator the transport sits behind an interface, so a new link doesn’t mean rewriting the core.</p>
+      </li>
+      <li class="reveal">
+        <span class="rule-n">03</span>
+        <h3><span lang="ru">Автоматизация вместо рутины</span><span lang="en">Automation over repetition</span></h3>
+        <p lang="ru">Рутине место в&nbsp;инструментах. Проверка в&nbsp;машине стала рутиной, и&nbsp;появился эмулятор. Чистка Windows стала рутиной, и&nbsp;появилась Quanta.</p>
+        <p lang="en">Routine work belongs in tools. Testing in a car became routine, so the emulator appeared. Cleaning Windows became routine, so Quanta appeared.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ─────────────── Stack ─────────────── -->
+  <section class="sec" id="stack" data-channel="base" aria-labelledby="t-stack">
+    <header class="sec-head reveal">
+      <h2 id="t-stack"><span lang="ru">Чем <em>занимаюсь.</em></span><span lang="en">What <em>I do.</em></span></h2>
+    </header>
+    <div class="dirs reveal">
+      <article class="dir" style="--dc:var(--orange)">
+        <svg class="dir-ic" viewBox="0 0 64 64" aria-hidden="true"><rect x="16" y="16" width="32" height="32" rx="4"/><rect x="25" y="25" width="14" height="14" rx="1.5"/><path d="M24 16V8M32 16V8M40 16V8M24 56v-8M32 56v-8M40 56v-8M16 24H8M16 32H8M16 40H8M56 24h-8M56 32h-8M56 40h-8"/></svg>
+        <h3>Embedded<br>&amp;&nbsp;Automotive</h3>
+        <ul><li>C / C++</li><li><span lang="ru">Микроконтроллеры</span><span lang="en">Microcontrollers</span></li><li>CAN</li><li>OBD-II</li></ul>
+      </article>
+      <article class="dir" style="--dc:var(--blue)">
+        <svg class="dir-ic" viewBox="0 0 64 64" aria-hidden="true"><rect x="7" y="12" width="50" height="36" rx="4"/><path d="M7 22h50M24 56h16M32 48v8"/><circle cx="14" cy="17" r=".8"/><circle cx="20" cy="17" r=".8"/></svg>
+        <h3>Desktop</h3>
+        <ul><li>C++</li><li>Qt</li><li>QML</li></ul>
+      </article>
+      <article class="dir" style="--dc:var(--lime)">
+        <svg class="dir-ic" viewBox="0 0 64 64" aria-hidden="true"><rect x="18" y="6" width="28" height="52" rx="6"/><path d="M28 12h8M29 52h6"/></svg>
+        <h3>Mobile</h3>
+        <ul><li>Flutter</li><li>Dart</li><li>Kotlin</li></ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- ─────────────── Contact ─────────────── -->
+  <section class="contact" id="contact" data-channel="base" aria-labelledby="t-contact">
+    <h2 id="t-contact" class="reveal"><span lang="ru">Давайте работать вместе.</span><span lang="en">Let’s work together.</span></h2>
+    <p class="reveal" lang="ru">Быстрее всего отвечаю в&nbsp;Telegram. Расскажите о&nbsp;задаче или вакансии.</p>
+    <p class="reveal" lang="en">Telegram is the fastest way to reach me. Tell me about the role or the task.</p>
+    <div class="contact-links reveal">
+      <a class="btn btn-fill" href="https://t.me/unreallx" target="_blank" rel="noopener"><svg><use href="#i-tg"/></svg>@unreallx</a>
+      <a class="btn" href="https://github.com/iUnreallx" target="_blank" rel="noopener"><svg><use href="#i-github"/></svg>GitHub</a>
+      <a class="btn" href="https://x.com/Unreallxz" target="_blank" rel="noopener"><svg><use href="#i-x"/></svg>X</a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <canvas class="bye" id="bye" aria-hidden="true"></canvas>
+  <div class="foot-row">
+    <span>© 2026 <span lang="ru">Артём</span><span lang="en">Artyom</span> · iUnreallx</span>
+    <a href="#top"><span lang="ru">Наверх</span><span lang="en">Back to top</span> ↑</a>
+  </div>
+</footer>
+
+<dialog class="lb" id="lb" aria-label="Просмотр скриншота" data-aria-en="Screenshot viewer">
+  <button class="lb-btn lb-close" type="button" data-lb="close" aria-label="Закрыть" data-aria-en="Close"><svg><use href="#i-close"/></svg></button>
+  <button class="lb-btn lb-prev" type="button" data-lb="prev" aria-label="Предыдущий" data-aria-en="Previous"><svg><use href="#i-left"/></svg></button>
+  <figure><img id="lb-img" alt=""><figcaption id="lb-cap"></figcaption></figure>
+  <button class="lb-btn lb-next" type="button" data-lb="next" aria-label="Следующий" data-aria-en="Next"><svg><use href="#i-right"/></svg></button>
+</dialog>
+
+<script src="assets/shapes.js"></script>
+<script src="particles.js"></script>
+<script src="main.js"></script>
+<script src="hero.js"></script>
+<script src="counters.js"></script>
+</body>
+</html>
