@@ -482,6 +482,10 @@ html[data-theme="dark"] .only-light, html[data-theme="light"] .only-dark { displ
   .rules li:hover h3 { transform: none; }
   .spec dd.big { font-size: clamp(4.6rem, 22vw, 6.4rem); }
 }
+/* With no mouse there is no hover: each row lights up as it scrolls into view. */
+@media (hover: none) {
+  .rules li.in h3 { color: var(--rc); transition-delay: .25s; }
+}
 
 /* ─── Lightbox ─── */
 .lb { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(5, 6, 7, .94); color: #F3F4EF; }

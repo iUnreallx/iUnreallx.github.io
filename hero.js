@@ -164,8 +164,18 @@
     if (reduce) dust.settle(performance.now());
   }));
 
-  addEventListener('pointermove', e => dust.pointer(e.clientX, e.clientY), { passive: true });
-  pin.addEventListener('pointerleave', () => dust.pointerOff());
+  // The cursor, or a finger: points are pushed away from it. Positions are taken relative to the
+  // canvas, because on a phone the first screen scrolls away instead of staying pinned.
+  const push = (x, y) => { const r = canvas.getBoundingClientRect(); dust.pointer(x - r.left, y - r.top); };
+  addEventListener('pointermove', e => { if (e.pointerType === 'mouse') push(e.clientX, e.clientY); }, { passive: true });
+  pin.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') dust.pointerOff(); });
+  // Touch events keep coming while the page scrolls, so the finger moves the dust and the
+  // page still scrolls as usual. They are passive: they never hold the scroll back.
+  const touch = e => { const t = e.touches[0]; if (t) push(t.clientX, t.clientY); };
+  pin.addEventListener('touchstart', touch, { passive: true });
+  pin.addEventListener('touchmove', touch, { passive: true });
+  pin.addEventListener('touchend', () => dust.pointerOff(), { passive: true });
+  pin.addEventListener('touchcancel', () => dust.pointerOff(), { passive: true });
 
   picks.forEach(a => {
     a.addEventListener('pointerenter', () => {

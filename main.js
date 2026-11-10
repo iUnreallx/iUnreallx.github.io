@@ -33,7 +33,7 @@
   });
 
   /* ── Language ───────────────────────────────────────── */
-  const TITLES = { ru: 'Артём: embedded, automotive, C++/Qt и Flutter', en: 'Artyom: embedded, automotive, C++/Qt and Flutter' };
+  const TITLES = { ru: 'Unreallx · Артём: embedded, automotive, C++/Qt и Flutter', en: 'Unreallx · Artyom: embedded, automotive, C++/Qt and Flutter' };
   const ruText = new WeakMap();   // the Russian originals of translated attributes
   const swapAttr = (el, attr, en, l) => {
     if (!ruText.has(el)) ruText.set(el, el.getAttribute(attr));
@@ -343,6 +343,10 @@
     byeText.pointer(e.clientX - r.left, e.clientY - r.top);
   }, { passive: true });
   byeCanvas.parentElement.addEventListener('pointerleave', () => byeText.pointerOff());
+  const byeTouch = e => { const t = e.touches[0], r = byeCanvas.getBoundingClientRect(); if (t) byeText.pointer(t.clientX - r.left, t.clientY - r.top); };
+  byeCanvas.addEventListener('touchstart', byeTouch, { passive: true });
+  byeCanvas.addEventListener('touchmove', byeTouch, { passive: true });
+  byeCanvas.addEventListener('touchend', () => byeText.pointerOff(), { passive: true });
 
   let byeOn = false, byeStarted = false;
   const byeTick = now => {
