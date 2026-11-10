@@ -33,7 +33,7 @@
   });
 
   /* ── Language ───────────────────────────────────────── */
-  const TITLES = { ru: 'Unreallx · Артём: embedded, automotive, C++/Qt и Flutter', en: 'Unreallx · Artyom: embedded, automotive, C++/Qt and Flutter' };
+  const TITLES = { ru: 'Unreallx', en: 'Unreallx' };
   const ruText = new WeakMap();   // the Russian originals of translated attributes
   const swapAttr = (el, attr, en, l) => {
     if (!ruText.has(el)) ruText.set(el, el.getAttribute(attr));
